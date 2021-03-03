@@ -2,6 +2,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React,  {useState, useEffect} from 'react';
 import './App.css';
 import MovieList from './components/MovieList';
+import MovieListHeading from './components/MovieListHeading';
+import SearchBox from './components/SearchBox';
+
 
 /* Bootstrap CSS */
 import 'bootstrap';
@@ -12,23 +15,29 @@ window.$ = JQuery;
 
 const App = () => { // eslint-disable-next-line
   const [movies, setMovies] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
 
-  const gestMovieRequest = async () => {
-    const url = "http://www.omdbapi.com/?s=horror&apikey=d6fd7dc7";
+  const getMovieRequest = async (searchValue) => {
+    const url = `http://www.omdbapi.com/?s=${searchValue}&apikey=d6fd7dc7`;
 
     const response = await fetch(url);
     const responseJson = await response.json();
 
-    console.log(responseJson);
+    if (responseJson.Search) {
     setMovies(responseJson.Search);
+    }
   };
 
   useEffect(() => {
-    gestMovieRequest();
-  }, []);
+    getMovieRequest(searchValue);
+  }, [searchValue]);
 
   return (
   <div className='container-fluid movie-app'>
+    <div className='row d-flex align-items-center mt-4 mb-4'>
+      <MovieListHeading heading='Movies' />
+      <SearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
+    </div>
     <div className='row'>
       <MovieList movies={movies} />
     </div>

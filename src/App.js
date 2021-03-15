@@ -34,11 +34,23 @@ const App = () => { // eslint-disable-next-line
     getMovieRequest(searchValue);
   }, [searchValue]);
 
-  
+  useEffect(() => {
+    const movieFavourites = JSON.parse(localStorage.getItem('react-movie-app-favourites')
+    );
+
+    if (movieFavourites) {
+      setFavourites(movieFavourites);
+    }
+  }, []);
+
+  const saveToLocalStorage = (items) => {
+    localStorage.setItem('react-movie-app-favourites', JSON.stringify(items))
+  };
 
   const addFavouriteMovie = (movie) => {
     const newFavouriteList = [...favourites, movie];
     setFavourites(newFavouriteList);
+    saveToLocalStorage(newFavouriteList);
   };
 
   const removeFavouriteMovie = (movie) => {
@@ -47,6 +59,7 @@ const App = () => { // eslint-disable-next-line
     );
 
     setFavourites(newFavouriteList);
+    saveToLocalStorage(newFavouriteList);
   };
 
   return (
